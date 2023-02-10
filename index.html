@@ -2,98 +2,96 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Encuesta de calificación de pisos</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Encuesta de pisos</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f6f6f6;
+      /* Add styles for the form and labels */
+      form {
+        width: 80%;
+        margin: 0 auto;
+        text-align: center;
+        padding: 20px;
+        background-color: #f2f2f2;
+        border: 1px solid #ccc;
+        border-radius: 10px;
       }
 
-      h1 {
-        text-align: center;
+      label {
+        display: block;
         margin: 20px 0;
       }
 
-      form {
-        max-width: 500px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #fff;
-      }
-
-      label,
-      input[type="submit"] {
-        display: block;
-        margin-bottom: 20px;
-      }
-
-      input[type="text"],
       input[type="number"] {
-        width: 100%;
         padding: 10px;
         font-size: 16px;
-        box-sizing: border-box;
-        border: 1px solid #ddd;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        width: 50%;
+        text-align: center;
       }
 
       input[type="submit"] {
-        width: 100%;
-        background-color: #1da1f2;
-        color: #fff;
-        padding: 10px;
-        text-align: center;
-        font-size: 16px;
-        cursor: pointer;
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
         border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
       }
 
-      @media (max-width: 500px) {
-        form {
-          padding: 10px;
-        }
+      input[type="submit"]:hover {
+        background-color: #3e8e41;
       }
     </style>
   </head>
   <body>
-    <h1>Encuesta de calificación de pisos</h1>
-    <form id="encuesta">
-      <label for="nombre-piso">Nombre del piso:</label>
-      <input type="text" id="nombre-piso" name="nombre-piso" required />
-      <br /><br />
-      <label for="caracteristica-1">Característica 1:</label>
-      <input
-        type="number"
-        id="caracteristica-1"
-        name="caracteristica-1"
-        min="1"
-        max="10"
-        required
-      />
-      <br /><br />
-      <label for="caracteristica-2">Característica 2:</label>
-      <input
-        type="number"
-        id="caracteristica-2"
-        name="caracteristica-2"
-        min="1"
-        max="10"
-        required
-      />
-      <br /><br />
-      <label for="caracteristica-3">Característica 3:</label>
-      <input
-        type="number"
-        id="caracteristica-3"
-        name="caracteristica-3"
-        min="1"
-        max="10"
-        required
-      />
-      <br /><br />
-      <input type="submit" value="Enviar encuesta" />
+    <!-- The form to collect the votes -->
+    <form id="vote-form">
+
+        <label>Que casa es?: <input type="text" name="Casa" /></label>
+      <label
+      <!-- Add the fields for the different characteristics -->
+      <label>Habitaciones: <input type="number" name="habitaciones" /></label>
+      <label
+        >Cercanía a supermercados: <input type="number" name="cercania-super"
+      /></label>
+      <label>Baños: <input type="number" name="banos" /></label>
+
+      <!-- The submit button -->
+      <input type="submit" value="Exportar a Excel" />
     </form>
+
+    <!-- Include the SheetJS library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
+
+    <!-- The JavaScript code to handle the form submission -->
+    <script>
+      // Get a reference to the form
+      const form = document.getElementById("vote-form");
+
+      // Listen for the form submission
+      form.addEventListener("submit", (event) => {
+        // Prevent the default form submission
+        event.preventDefault();
+
+        // Collect the data from the form
+        const data = {
+          habitaciones: form.elements["habitaciones"].value,
+          "cercania-super": form.elements["cercania-super"].value,
+          banos: form.elements["banos"].value,
+        };
+
+        // Convert the data to a worksheet
+        const worksheet = XLSX.utils.json_to_sheet([data]);
+
+        // Create a new workbook and add the worksheet
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Votos");
+
+        // Generate the Excel file and download it
+        XLSX.writeFile(workbook, "votos.xlsx");
+      });
+    </script>
   </body>
 </html>
