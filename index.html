@@ -1,8 +1,63 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      body {
+        background-color: #e8f5e9;
+      }
+
+      h1 {
+        text-align: center;
+        color: #2e7d32;
+        margin-top: 30px;
+      }
+
+      form {
+        background-color: #c8e6c9;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 2px 2px 10px #a5d6a7;
+        margin: 0 auto;
+        width: 500px;
+      }
+
+      label,
+      input[type="submit"] {
+        color: #2e7d32;
+        font-weight: bold;
+      }
+
+      p {
+        margin-top: 20px;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+        padding: 10px;
+        margin-top: 10px;
+        width: 100%;
+        border-radius: 5px;
+        border: 1px solid #2e7d32;
+      }
+
+      input[type="submit"] {
+        background-color: #2e7d32;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+        width: 100%;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #258c2e;
+      }
+    </style>
     <title>Encuesta de Votos para Pisos</title>
   </head>
   <body>
@@ -10,25 +65,47 @@
     <form id="vote-form">
       <p>
         <label for="link-idealista">Enlace de Idealista:</label>
-        <input type="text" id="link-idealista" name="link-idealista" required>
+        <input type="text" id="link-idealista" name="link-idealista" required />
       </p>
       <p>
         <label for="habitaciones">Habitaciones:</label>
-        <input type="number" id="habitaciones" name="habitaciones" min="1" max="10" required>
+        <input
+          type="number"
+          id="habitaciones"
+          name="habitaciones"
+          min="1"
+          max="10"
+          required
+        />
       </p>
       <p>
         <label for="cercania-super">Cercanía al Supermercado:</label>
-        <input type="number" id="cercania-super" name="cercania-super" min="1" max="10" required>
+        <input
+          type="number"
+          id="cercania-super"
+          name="cercania-super"
+          min="1"
+          max="10"
+          required
+        />
       </p>
       <p>
         <label for="banos">Baños:</label>
-        <input type="number" id="banos" name="banos" min="1" max="10" required>
+        <input
+          type="number"
+          id="banos"
+          name="banos"
+          min="1"
+          max="10"
+          required
+        />
       </p>
       <p>
-        <input type="submit" value="Exportar a Excel">
+        <input type="submit" value="Exportar a Excel" />
       </p>
     </form>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.6/xlsx.core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.6/xlsx.core.min.js"></script>
     <script>
       // Get a reference to the form
@@ -39,23 +116,55 @@
         // Prevent the default form submission
         event.preventDefault();
 
-        // Collect the data from the form
-        const data = {
-          link: form.elements["link-idealista"].value,
-          habitaciones: form.elements["habitaciones"].value,
-          "cercania-super": form.elements["cercania-super"].value,
-          banos: form.elements["banos"].value
+        // Function to fetch image from a URL and return it as a data URL
+        const fetchImage = (imageUrl) => {
+          return fetch(imageUrl)
+            .then((response) => response.blob())
+            .then((blob) => {
+              const reader = new FileReader();
+              reader.readAsDataURL(blob);
+              return new Promise((resolve, reject) => {
+                reader.onloadend = () => {
+                  resolve(reader.result);
+                };
+                reader.onerror = reject;
+              });
+            });
         };
 
-        // Convert the data to a worksheet
-        const worksheet = XLSX.utils.json_to_sheet([data]);
+        // Collect the data from the form
+        const data = {
+          habitaciones: form.elements["habitaciones"].value,
+          "cercania-super": form.elements["cercania-super"].value,
+          banos: form.elements["banos"].value,
+        };
 
-        // Create a new workbook and add the worksheet
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Votos");
+        // Extract the image from the Idealista link
+        const imageUrl = form.elements["idealista-link"].value;
+        fetchImage(imageUrl).then((imageData) => {
+          data.foto = imageData;
 
-        // Generate the Excel file and download it
-        XLSX.writeFile(workbook, "votos.xlsx");
+          // Convert the data to a worksheet
+          const worksheet = XLSX.utils.json_to_sheet(data);
+
+          // Create a workbook using the worksheet
+          const workbook = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(workbook, worksheet, "Votos");
+
+          // Generate the binary data for the XLSX file
+          const binaryData = XLSX.write(workbook, {
+            bookType: "xlsx",
+            type: "array",
+          });
+
+          // Create a link to download the XLSX file
+          const link = document.createElement("a");
+          link.href = window.URL.createObjectURL(new Blob([binaryData]));
+          link.download = "votos.xlsx";
+
+          // Trigger the download
+          link.click();
+        });
       });
     </script>
   </body>
