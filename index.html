@@ -1,1 +1,99 @@
-.
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Encuesta de calificación de pisos</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f6f6f6;
+      }
+
+      h1 {
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      form {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+      }
+
+      label,
+      input[type="submit"] {
+        display: block;
+        margin-bottom: 20px;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+      }
+
+      input[type="submit"] {
+        width: 100%;
+        background-color: #1da1f2;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+      }
+
+      @media (max-width: 500px) {
+        form {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Encuesta de calificación de pisos</h1>
+    <form id="encuesta">
+      <label for="nombre-piso">Nombre del piso:</label>
+      <input type="text" id="nombre-piso" name="nombre-piso" required />
+      <br /><br />
+      <label for="caracteristica-1">Característica 1:</label>
+      <input
+        type="number"
+        id="caracteristica-1"
+        name="caracteristica-1"
+        min="1"
+        max="10"
+        required
+      />
+      <br /><br />
+      <label for="caracteristica-2">Característica 2:</label>
+      <input
+        type="number"
+        id="caracteristica-2"
+        name="caracteristica-2"
+        min="1"
+        max="10"
+        required
+      />
+      <br /><br />
+      <label for="caracteristica-3">Característica 3:</label>
+      <input
+        type="number"
+        id="caracteristica-3"
+        name="caracteristica-3"
+        min="1"
+        max="10"
+        required
+      />
+      <br /><br />
+      <input type="submit" value="Enviar encuesta" />
+    </form>
+  </body>
+</html>
