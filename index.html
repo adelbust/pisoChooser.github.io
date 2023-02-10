@@ -1,71 +1,35 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Encuesta de pisos</title>
-    <style>
-      /* Add styles for the form and labels */
-      form {
-        width: 80%;
-        margin: 0 auto;
-        text-align: center;
-        padding: 20px;
-        background-color: #f2f2f2;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-      }
-
-      label {
-        display: block;
-        margin: 20px 0;
-      }
-
-      input[type="number"] {
-        padding: 10px;
-        font-size: 16px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        width: 50%;
-        text-align: center;
-      }
-
-      input[type="submit"] {
-        padding: 10px 20px;
-        background-color: #4caf50;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 20px;
-      }
-
-      input[type="submit"]:hover {
-        background-color: #3e8e41;
-      }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta de Votos para Pisos</title>
   </head>
   <body>
-    <!-- The form to collect the votes -->
+    <h1>Encuesta de Votos para Pisos</h1>
     <form id="vote-form">
-
-        <label>Que casa es?: <input type="text" name="Casa" /></label>
-      <label
-      <!-- Add the fields for the different characteristics -->
-      <label>Habitaciones: <input type="number" name="habitaciones" /></label>
-      <label
-        >Cercanía a supermercados: <input type="number" name="cercania-super"
-      /></label>
-      <label>Baños: <input type="number" name="banos" /></label>
-
-      <!-- The submit button -->
-      <input type="submit" value="Exportar a Excel" />
+      <p>
+        <label for="link-idealista">Enlace de Idealista:</label>
+        <input type="text" id="link-idealista" name="link-idealista" required>
+      </p>
+      <p>
+        <label for="habitaciones">Habitaciones:</label>
+        <input type="number" id="habitaciones" name="habitaciones" min="1" max="10" required>
+      </p>
+      <p>
+        <label for="cercania-super">Cercanía al Supermercado:</label>
+        <input type="number" id="cercania-super" name="cercania-super" min="1" max="10" required>
+      </p>
+      <p>
+        <label for="banos">Baños:</label>
+        <input type="number" id="banos" name="banos" min="1" max="10" required>
+      </p>
+      <p>
+        <input type="submit" value="Exportar a Excel">
+      </p>
     </form>
 
-    <!-- Include the SheetJS library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
-
-    <!-- The JavaScript code to handle the form submission -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.6/xlsx.core.min.js"></script>
     <script>
       // Get a reference to the form
       const form = document.getElementById("vote-form");
@@ -77,9 +41,10 @@
 
         // Collect the data from the form
         const data = {
+          link: form.elements["link-idealista"].value,
           habitaciones: form.elements["habitaciones"].value,
           "cercania-super": form.elements["cercania-super"].value,
-          banos: form.elements["banos"].value,
+          banos: form.elements["banos"].value
         };
 
         // Convert the data to a worksheet
